@@ -23,7 +23,7 @@ class HabitSerializer(serializers.ModelSerializer):
             )
 
         # execution_time <= 120
-        if execution_time > 120:
+        if execution_time and execution_time > 120:
             raise serializers.ValidationError(
                 "Время выполнения > 120 секунд"
             )
@@ -41,7 +41,7 @@ class HabitSerializer(serializers.ModelSerializer):
             )
 
         # frequency <= 7
-        if frequency > 7:
+        if frequency and frequency > 7:
             raise serializers.ValidationError(
                 "Нельзя реже чем раз в 7 дней"
             )

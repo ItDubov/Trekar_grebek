@@ -1,4 +1,4 @@
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 from rest_framework.permissions import IsAuthenticated
 
 from .models import Habit
@@ -9,31 +9,21 @@ from .pagination import HabitPagination
 
 class HabitViewSet(ModelViewSet):
 
-    queryset = Habit.objects.all()
-
     serializer_class = HabitSerializer
     permission_classes = [IsAuthenticated, IsOwner]
     pagination_class = HabitPagination
 
     def get_queryset(self):
-        return Habit.objects.filter(
-            user=self.request.user
-        )
+        return Habit.objects.filter(user=self.request.user)
 
     def perform_create(self, serializer):
-        serializer.save(
-            user=self.request.user
-        )
+        serializer.save(user=self.request.user)
 
 
-class PublicHabitViewSet(ModelViewSet):
-
-    queryset = Habit.objects.all()
-
+class PublicHabitViewSet(ReadOnlyModelViewSet):
     serializer_class = HabitSerializer
     permission_classes = [IsAuthenticated]
+    pagination_class = HabitPagination
 
     def get_queryset(self):
-        return Habit.objects.filter(
-            is_public=True
-        )
+        return Habit.objects.filter(is_public=True)
